@@ -119,3 +119,21 @@ class PanBase(Ingrediente):
  
     def esta_listo(self):
         return True  # siempre listo
+    
+# Fabrica de ingredientes 
+# Convierte una clave de texto (ej. "carne") en el objeto correcto.
+INGREDIENTES = {
+    "pan":       lambda: PanBase("Pan"),
+    "tortilla":  lambda: PanBase("Tortilla"),
+    "carne":     lambda: Proteina("Carne"),
+    "pollo":     lambda: Proteina("Pollo"),
+    "pescado":   lambda: Proteina("Pescado"),
+    "salchicha": lambda: Proteina("Salchicha"),
+    "lechuga":   lambda: Vegetal("Lechuga"),
+    "tomate":    lambda: Vegetal("Tomate"),
+    "cebolla":   lambda: Vegetal("Cebolla"),
+    "papa":      lambda: Papa("Papa"),
+}
+
+def crear_ingrediente(clave):
+    return INGREDIENTES[clave]()
