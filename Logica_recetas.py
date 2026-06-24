@@ -1,10 +1,20 @@
-"""Depende unicamente de:
-  - receta.py        (la clase Receta)
-  - configuracion.py (RECETAS y la fabrica de ingredientes)
-No importa pygame, ni Chef, ni el tablero. """
 import random
-import configuracion as cfg
-from receta import Receta
+from receta import Receta #le corresponde a Carlos Receta
+from Ingredientes import crear_ingrediente   
+# Definicion de recetas
+# clave = (nombre visible, [ingredientes que lleva])
+RECETAS = {
+    "papas_fritas":        ("Papas Fritas",        ["papa"]),
+    "hamburguesa_clasica": ("Hamburguesa Clasica", ["pan", "carne"]),
+    "hot_dog":             ("Hot Dog",             ["pan", "salchicha"]),
+    "taco_pollo":          ("Taco de Pollo",       ["tortilla", "pollo", "lechuga"]),
+    "taco_carne":          ("Taco de Carne",       ["tortilla", "carne", "cebolla"]),
+    "taco_supremo":        ("Taco Supremo",        ["tortilla", "carne", "tomate", "cebolla"]),
+    "combo_pescado":       ("Combo de Pescado",    ["pan", "pescado", "lechuga"]),
+    "hamburguesa_gourmet": ("Hamburguesa Gourmet", ["pan", "carne", "lechuga", "tomate"]),
+    "plato_fuerte":        ("Plato Fuerte",        ["pollo", "papa", "tomate", "cebolla"]),
+    "mega_combo":          ("Mega Combo",          ["pan", "carne", "papa", "tomate"]),
+}
 
 class GestorRecetas:
     #Administra las ordenes activas, su tiempo, su penalizacion y el puntaje.
@@ -39,10 +49,10 @@ class GestorRecetas:
     # 1. GENERACION ALEATORIA DE RECETAS
     def _construir_receta(self, clave):
         """Crea una Receta a partir de su clave en configuracion.RECETAS."""
-        nombre, claves_ing = cfg.RECETAS[clave]
+        nombre, claves_ing = RECETAS[clave]
         requeridos = []
         for clave_ing in claves_ing:
-            molde = cfg.crear_ingrediente(clave_ing)
+            molde = crear_ingrediente(clave_ing)
             # cada requerido es (nombre_visible, estado_en_que_debe_estar)
             requeridos.append((molde.nombre, molde.estado_objetivo()))
         return Receta(nombre, requeridos)
