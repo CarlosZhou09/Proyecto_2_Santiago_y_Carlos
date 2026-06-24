@@ -21,7 +21,7 @@ ingredientes acumulados a cocina, y cocina es quien pregunta:
 "oye GestorRecetas, esto que tengo, hace match con alguna receta?"
 """
 
-from estaciones import Estacion
+from Estaciones import Estacion
 
 
 class EstacionEntrega(Estacion):
