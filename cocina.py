@@ -50,6 +50,10 @@ class Cocina:
         self.entrega = None          # referencia rapida a EstacionEntrega
 
         self._chef_activo = 0        # indice del chef que recibe controles
+        # Control de velocidad del chef: segundos que deben pasar entre paso y paso.
+        # Mas alto = mas lento
+        self.RETARDO_MOVIMIENTO = 0.12
+        self._cooldown_movimiento = 0.0
 
         # GestorRecetas administra ordenes, timer de recetas y puntaje
         self._gestor = GestorRecetas(self._mapa)
@@ -163,9 +167,16 @@ class Cocina:
     def mover_chef_activo(self, direccion):
         """
         Mueve el chef activo en la direccion indicada, si la celda esta libre.
-        direccion: una de las constantes ARRIBA/ABAJO/IZQUIERDA/DERECHA de chef.py
+        Solo se mueve si ya paso el retardo desde el ultimo paso (evita que
+        se mueva demasiado rapido al mantener la tecla presionada).
         """
-        self._chefs[self._chef_activo].mover(direccion, self._celda_libre)
+        if self._cooldown_movimiento > 0:
+            return  # todavia no toca moverse, ignoramos este frame
+
+        movido = self._chefs[self._chef_activo].mover(direccion, self._celda_libre)
+        if movido:
+            self._cooldown_movimiento = self.RETARDO_MOVIMIENTO
+        
 
     def _celda_libre(self, fila, columna):
         """
@@ -241,6 +252,10 @@ class Cocina:
           2. Actualiza GestorRecetas (genera ordenes, aplica penalizaciones).
           3. Si la partida termino, le dice a GestorRecetas que deje de generar.
         """
+        # bajar el cooldown de movimiento del chef
+        if self._cooldown_movimiento > 0:
+            self._cooldown_movimiento -= dt
+
         if self.terminado():
             return
 
